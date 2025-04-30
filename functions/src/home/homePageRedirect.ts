@@ -9,7 +9,7 @@ import {
 } from "../utils/alertMessages";
 import { failedResponse, successfulResponse } from "../utils/backendResponse";
 
-export const joinGame = functions.https.onCall(
+export const homePageRedirect = functions.https.onCall(
   async (request: any, context) => {
     const { gameId, playerName, uid } = request.data as ClientData;
 

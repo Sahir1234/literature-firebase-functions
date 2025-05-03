@@ -2,10 +2,10 @@
 export enum GameStatus {
     "IN_LOBBY",
     "IN_PROGRESS",
-    "FINISHED"
+    "GAME_OVER"
 }
 
-// NEED TO MAKE SURE WE HAVE THE GAME DATA TOO
+
 export interface GameData {
     status: GameStatus;
     players: {
@@ -42,4 +42,11 @@ export const addPlayerToGame = (gameData: GameData, playerName: string, uid: str
     };
 
     playerData[playerName] = newPlayer;
+}
+
+export const removePlayerFromGame = (gameData: GameData, playerName: string) => {
+    const playerData = gameData.players;
+    if (playerData[playerName]) {
+        delete playerData[playerName];
+    }
 }

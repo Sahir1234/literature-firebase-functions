@@ -7,10 +7,11 @@ import {
   LOBBY_NOT_OPEN,
   MISSING_CLIENT_SIDE_DATA, 
   SUCCESS_GAME_JOINED,
-  PLAYER_ALREADY_IN_GAME
+  PLAYER_ALREADY_IN_GAME,
+  GAME_IS_FULL
 } from "../utils/alertMessages";
 import { failedResponse, successfulResponse } from "../utils/backendResponse";
-import { addPlayerToGame, GameStatus } from "../data/gameData";
+import { addPlayerToGame, isGameFull, isGameInLobby, isPlayerInGame } from "../data/gameData";
 
 export const joinGame = functions.https.onCall(
   async (request: any, context) => {
@@ -30,13 +31,16 @@ export const joinGame = functions.https.onCall(
 
       let gameData = snapshot.val();
 
-      if (gameData.status !== GameStatus.IN_LOBBY) {
+      if (!isGameInLobby) {
         return failedResponse(LOBBY_NOT_OPEN);
       }
 
-      const playerData = gameData.players;
-      if (playerData[playerName]) {
+      if (isPlayerInGame(gameData, playerName, uid)) {
         return failedResponse(PLAYER_ALREADY_IN_GAME);
+      }
+
+      if (isGameFull(gameData)) {
+        return failedResponse(GAME_IS_FULL)
       }
 
       addPlayerToGame(gameData, playerName, uid);

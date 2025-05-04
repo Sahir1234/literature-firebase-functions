@@ -9,7 +9,7 @@ import {
   GAME_HAS_ALREADY_STARTED
 } from "../utils/alertMessages";
 import { failedResponse, successfulResponse } from "../utils/backendResponse";
-import { removePlayerFromGame, GameStatus } from "../data/gameData";
+import { removePlayerFromGame, isGameEmpty, isGameInLobby } from "../data/gameData";
 
 export const leaveLobby = functions.https.onCall(
   async (request: any, context) => {
@@ -25,12 +25,16 @@ export const leaveLobby = functions.https.onCall(
 
       // skip validations since we want to be able to clear client side data
       let gameData = snapshot.val();
-      if (gameData.status !== GameStatus.IN_LOBBY) {
+      if (!isGameInLobby(gameData)) {
         return failedResponse(GAME_HAS_ALREADY_STARTED);
       }
 
       removePlayerFromGame(gameData, playerName);
-      await gameRef.set(gameData);
+      if (isGameEmpty(gameData)) {
+        await gameRef.remove();
+      } else {
+        await gameRef.set(gameData);
+      }
   
       return successfulResponse(SUCCESS_GAME_LEFT);
 

@@ -26,7 +26,8 @@ export class GameData {
 
     public static createNewGame(playerName: string, uid: string): GameData {
         const publicData = PublicGameData.createNewPublicGame(playerName);
-        const privateData = {uid: PrivatePlayerData.createNewPrivateData(playerName)};
+        const privateData: { [key: string]: PrivatePlayerData } = {};
+        privateData[uid] = PrivatePlayerData.createNewPrivateData(playerName);
         return new GameData(publicData, privateData);
     }
 
@@ -64,7 +65,7 @@ export class GameData {
         this.private[uid] = privateData;
         this.public.addPlayer(name);
 
-        return GameActionResult.SUCCESS;
+        return GameActionResult.SUCCESS_JOINED_GAME;
     }
 
     public removePlayer(name: string, uid: string): GameActionResult {
@@ -75,7 +76,7 @@ export class GameData {
         delete this.private[uid];
         this.public.removePlayer(name);
 
-        return GameActionResult.SUCCESS;
+        return GameActionResult.SUCCESS_LEFT_GAME;
     }
 
     public switchPlayerTeam(name: string): GameActionResult {
@@ -84,7 +85,7 @@ export class GameData {
         }
 
         this.public.switchPlayerTeam(name);
-        return GameActionResult.SUCCESS;
+        return GameActionResult.SUCCESS_SWITCHED_TEAMS;
     }
 
     public beginGame(): GameActionResult {
@@ -96,7 +97,7 @@ export class GameData {
             return GameActionResult.FAILED_INCORRECT_AMOUNT_OF_PLAYERS;
         }
 
-        return GameActionResult.SUCCESS;
+        return GameActionResult.SUCCESS_BEGAN_GAME;
     }
 
 

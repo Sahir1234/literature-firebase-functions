@@ -6,8 +6,11 @@ export class GameActionResult {
     this.message = message;
   }
 
-  public static SUCCESS = new GameActionResult("Success!");
   public static SUCCESS_CREATE_NEW_GAME = new GameActionResult("Successfully created a new game!");
+  public static SUCCESS_LEFT_GAME = new GameActionResult("Successfully left game!");
+  public static SUCCESS_JOINED_GAME = new GameActionResult("Successfully joined game!");
+  public static SUCCESS_SWITCHED_TEAMS = new GameActionResult("Switched teams!");
+  public static SUCCESS_BEGAN_GAME = new GameActionResult("The game has begun!");
 
   public static FAILED_GAME_ID_IN_USE = new GameActionResult("Game ID is currently in use. Please pick a new one.");
   public static FAILED_GAME_ID_NOT_FOUND = new GameActionResult("Game ID not found. Please check the ID and try again.");
@@ -23,6 +26,10 @@ export class GameActionResult {
   }
 
   public isSuccess(): boolean {
-    return this === GameActionResult.SUCCESS || this === GameActionResult.SUCCESS_CREATE_NEW_GAME;
+    return this === GameActionResult.SUCCESS_CREATE_NEW_GAME ||
+           this === GameActionResult.SUCCESS_LEFT_GAME ||
+           this === GameActionResult.SUCCESS_JOINED_GAME ||
+           this === GameActionResult.SUCCESS_SWITCHED_TEAMS ||
+           this === GameActionResult.SUCCESS_BEGAN_GAME;
   }
 }

@@ -46,7 +46,7 @@ export class PublicGameData {
     }
 
     public isPlayerNameInGame(name: string): boolean {
-        return name in this.redTeam || name in this.blackTeam;
+        return this.redTeam.includes(name) || this.blackTeam.includes(name);
     }
 
     public addPlayer(name: string): void {
@@ -81,10 +81,10 @@ export class PublicGameData {
     }
 
     public switchPlayerTeam(name: string) {
-        if (name in this.redTeam) {
+        if (this.redTeam.includes(name)) {
             this.removePlayerFromTeams(name);
             this.blackTeam.push(name);
-        } else if (name in this.blackTeam) {
+        } else if (this.blackTeam.includes(name)) {
             this.removePlayerFromTeams(name);
             this.redTeam.push(name);
         }
